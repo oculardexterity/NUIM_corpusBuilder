@@ -1,3 +1,4 @@
+import shelve
 import xlrd as xlrd
 
 workbook = xlrd.open_workbook('test.xlsx')
@@ -16,13 +17,22 @@ def getRowData(sheet):
 
 
 def buildRowDict(row, headers, id_column):
+	# this line here... no need to do this every time?
 	id_index = headers.index(id_column)
+	
 	row_id = row[id_index]
 	row_dict = { row_id: {} }
 	for i, cell in enumerate(row):
 		row_dict[row_id][headers[i]] = cell
 	return row_dict
 
+def buildShelfFile(shelf_file_path, sheet, id_column):
+	shelve_file = shelve.open(shelf_file_path)
+	headers = getHeaders(sheet)
+	for row in getRowData(sheet):
+		row = buildRowDict(row, headers, id_column)
+		shelve_file[row.keys()[0]] = row[row.keys()[0]]
+	shelve_file.close()
 
 #print(getRowData(sheet))
 
@@ -35,9 +45,11 @@ def buildRowDict(row, headers, id_column):
 #		add to shelf.
 
 # yes...
+
+
 #for row in getRowData(sheet):
 #	print row
-
+'''
 
 def getDataDict(sheet):
 	headers = getHeaders(sheet)
@@ -48,7 +60,7 @@ def getDataDict(sheet):
 	# for each cell in row, add header and value
 
 	# USE THIS CODE TO WRITE SERIALLY TO SHELF...
-	'''
+	
 	for row_index, row in enumerate(rows):
 		row_dict = {}
 		for col_index in range(sheet.ncols):
