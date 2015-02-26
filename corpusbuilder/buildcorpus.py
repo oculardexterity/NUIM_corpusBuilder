@@ -15,6 +15,15 @@ def getRowData(sheet):
 		yield row
 
 
+def buildRowDict(row, headers, id_column):
+	id_index = headers.index(id_column)
+	row_id = row[id_index]
+	row_dict = { row_id: {} }
+	for i, cell in enumerate(row):
+		row_dict[row_id][headers[i]] = cell
+	return row_dict
+
+
 #print(getRowData(sheet))
 
 
@@ -26,8 +35,8 @@ def getRowData(sheet):
 #		add to shelf.
 
 # yes...
-for row in getRowData(sheet):
-	print row
+#for row in getRowData(sheet):
+#	print row
 
 
 def getDataDict(sheet):

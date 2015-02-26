@@ -21,7 +21,10 @@ class TestBuildCorpus:
 
 
 	def test_buildRowDict(self):
-		assert buildRowDict(row, id_column) == { 0 : { u'A_HEADER' : u'a_value', u'B_HEADER': u'b_value' }}
+		row = [u'a_value', u'b_value', u'id_1']
+		headers = [u'A_HEADER', u'B_HEADER', u'ID']
+		id_column = 'ID'
+		assert cb.buildRowDict(row, headers, id_column) == { 'id_1' : { u'A_HEADER' : u'a_value', u'B_HEADER': u'b_value', u'ID': u'id_1' }}
 		# with the id_column value as the key
 
 '''
