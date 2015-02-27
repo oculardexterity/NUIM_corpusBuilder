@@ -2,8 +2,8 @@ import shelve
 import xlrd as xlrd
 
 #MOVE THESE TO MAIN!!
-#workbook = xlrd.open_workbook('test/test_sheets/test_simple.xlsx')
-#sheet = workbook.sheet_by_index(0)
+workbook = xlrd.open_workbook('test/test_sheets/test_id_clash.xlsx')
+sheet = workbook.sheet_by_index(0)
 
 def getHeaders(sheet):
 	headers = [sheet.cell(0, col_index).value for col_index in range(sheet.ncols)]
@@ -44,12 +44,24 @@ def buildShelveFile(shelf_file_path, sheet, id_column):
 		#doesn't care that it overwrites
 
 		# Assuming there are duplications... make more
-		# general 
-
-		shelve_file[row.keys()[0]] = row[row.keys()[0]]
+		# general
+		
+		if row.keys()[0].encode('ascii') in shelve_file:
+			# resolve conflict
+			''''''
+			#shelve_file['thing'] = 'thong'
+		else:
+			# Just write
+			shelve_file[row.keys()[0]] = row[row.keys()[0]]
 
 		## fields to farm out to other file, plus filelocation??
 	shelve_file.close()
+
+
+
+
+#buildShelveFile('test/test_tmp/test_clash.shelve', sheet, 'ID')
+
 
 #print(getRowData(sheet))
 
