@@ -32,7 +32,6 @@ def buildShelveFile(shelf_file_path, sheet, id_column):
 	for row in getRowData(sheet):
 		row = buildRowDict(row, headers, id_column)
 
-		# id conflict detector... simple:
 			# conflict resolver on some other ChARACTERISTIC??
 		# id conflict resolver ....
 		'''

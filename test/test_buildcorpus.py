@@ -11,16 +11,20 @@ import corpusbuilder.extractToShelve as extract
 class TestBuildCorpus:
 
 	def setup(self):
-		workbook = xlrd.open_workbook('test/test_sheets/test_simple.xlsx')
-		self.sheet = workbook.sheet_by_index(0)
+		self.test_simple_workbook = xlrd.open_workbook('test/test_sheets/test_simple.xlsx')
+		self.test_simple_sheet = self.test_simple_workbook.sheet_by_index(0)
+		
+		self.test_id_clash_workbook = xlrd.open_workbook('test/test_sheets/test_id_clash.xlsx')
 		self.id_column = 'ID'
+
+		self.shelve_file_path = 'test/test_tmp/test.shelve'
 
 
 	def test_getHeaders(self):
-		assert extract.getHeaders(self.sheet) == [u'A_HEADER', u'B_HEADER', u'ID']
+		assert extract.getHeaders(self.test_simple_sheet) == [u'A_HEADER', u'B_HEADER', u'ID']
 
 	def test_getRowData(self):
-		assert list(extract.getRowData(self.sheet)) == [[u'a_value', u'b_value', u'id_1'],[u'a_value2', u'b_value2', u'id_2']]
+		assert list(extract.getRowData(self.test_simple_sheet)) == [[u'a_value', u'b_value', u'id_1'],[u'a_value2', u'b_value2', u'id_2']]
 
 
 	def test_buildRowDict(self):
@@ -30,21 +34,16 @@ class TestBuildCorpus:
 		# with the id_column value as the key
 
 	def test_buildShelveFile_should_create_corpus_shelve_file(self):
-			# build shelf file
-		shelve_file_path = 'test/test_tmp/test.shelve'
-		extract.buildShelveFile(shelve_file_path, self.sheet, self.id_column) # call the function to be tested
-		assert os.path.isfile(shelve_file_path) == True
-		os.remove(shelve_file_path) 
+		extract.buildShelveFile(self.shelve_file_path, self.test_simple_sheet, self.id_column) # call the function to be tested
+		assert os.path.isfile(self.shelve_file_path) == True
+		os.remove(self.shelve_file_path) 
 
 	def test_buildShelveFile_should_write_properly(self):
-		# build shelf file
-		shelve_file_path = 'test/test_tmp/test.shelve'
-		extract.buildShelveFile(shelve_file_path, self.sheet, self.id_column) # call the function to be tested
-		assert shelve.open(shelve_file_path) == { 'id_1' : { u'A_HEADER' : u'a_value', u'B_HEADER': u'b_value', u'ID': u'id_1' },
+		extract.buildShelveFile(self.shelve_file_path, self.test_simple_sheet, self.id_column) # call the function to be tested
+		assert shelve.open(self.shelve_file_path) == { 'id_1' : { u'A_HEADER' : u'a_value', u'B_HEADER': u'b_value', u'ID': u'id_1' },
 																							'id_2' : { u'A_HEADER' : u'a_value2', u'B_HEADER': u'b_value2', u'ID': u'id_2' }
 																						}
-		# remove test shelf
-		os.remove(shelve_file_path)
+		os.remove(self.shelve_file_path)
 
 	def test_buildCorpusShelve_should_remove_duplicate_pages(self):
 		assert 1 == 1
