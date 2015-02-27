@@ -33,6 +33,7 @@ def buildShelveFile(shelf_file_path, sheet, id_column):
 		row = buildRowDict(row, headers, id_column)
 
 		# id conflict detector... simple:
+			# conflict resolver on some other ChARACTERISTIC??
 		# id conflict resolver ....
 		'''
 		# HERE check id of column, if same, check timestamp
@@ -47,6 +48,8 @@ def buildShelveFile(shelf_file_path, sheet, id_column):
 		# general 
 
 		shelve_file[row.keys()[0]] = row[row.keys()[0]]
+
+		## fields to farm out to other file, plus filelocation??
 	shelve_file.close()
 
 #print(getRowData(sheet))
