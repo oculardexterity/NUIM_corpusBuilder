@@ -26,7 +26,9 @@ def buildRowDict(row, headers, id_column):
 		row_dict[row_id][headers[i]] = cell
 	return row_dict
 
-def buildShelveFile(shelf_file_path, sheet, id_column, test=False):
+
+# MAIN FUNCTION OF THE SHOW....
+def buildShelveFile(shelf_file_path, sheet, id_column, conflict_res_column=0, test=False): #and conflict_res_order
 	shelve_file = shelve.open(shelf_file_path)
 	headers = getHeaders(sheet)
 	for row in getRowData(sheet):
@@ -37,7 +39,7 @@ def buildShelveFile(shelf_file_path, sheet, id_column, test=False):
 		
 		if row.keys()[0].encode('ascii') in shelve_file:
 			if not test: # Prevents the chooseBetween function from working to test should_not_overwrite_existing
-				shelve_file[row.keys()[0]] = resolveConflict(shelve_file[row.keys()[0]], row[row.keys()[0]], 'A_HEADER')
+				shelve_file[row.keys()[0]] = resolveConflict(shelve_file[row.keys()[0]], row[row.keys()[0]], conflict_res_column)
 		else:
 			# Just write
 			shelve_file[row.keys()[0]] = row[row.keys()[0]]
@@ -47,11 +49,10 @@ def buildShelveFile(shelf_file_path, sheet, id_column, test=False):
 
 
 
-def chooseBetween(shelve_file_row, row, column_to_compare, select='greater'):
-	shelf_row = shelve_file_row
-	new_row = row
-
+def chooseBetween(shelf_row, new_row, column_to_compare, select='greater'):
 	if shelf_row[column_to_compare] < new_row[column_to_compare] and select == 'greater':
 		return new_row
+	elif shelf_row[column_to_compare] < new_row[column_to_compare] and select == 'lesser':
+		return shelf_row
 
 

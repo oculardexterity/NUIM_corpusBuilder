@@ -50,6 +50,8 @@ class TestBuildCorpus:
 		extract.buildShelveFile(self.shelve_file_path, self.test_id_clash_sheet, self.id_column, test=True) # builds pickle
 		assert shelve.open(self.shelve_file_path) != { u'id_1' : { u'A_HEADER' : u'a_value2', u'B_HEADER': u'b_value2', u'ID': u'id_1' } }
 		os.remove(self.shelve_file_path)
+
+	## TEST ^^ WORKS TOTALLY ... i.e. give it a sheet with conflict, check result.
 		
 	
 	def test_chooseBetween_should_choose_correct(self):
