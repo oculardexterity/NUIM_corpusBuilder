@@ -31,10 +31,12 @@ def buildShelveFile(shelf_file_path, sheet, id_column, test=False):
 	headers = getHeaders(sheet)
 	for row in getRowData(sheet):
 		row = buildRowDict(row, headers, id_column)
+		
+		# HERE SET FUNCTION TO RESOLVE CONFLICT ... function should return item to overwrite
 		resolveConfict = chooseBetween
 		
 		if row.keys()[0].encode('ascii') in shelve_file:
-			if not test: # Prevents the chooseBetween function from working to test should_not_overwrite option
+			if not test: # Prevents the chooseBetween function from working to test should_not_overwrite_existing
 				shelve_file[row.keys()[0]] = resolveConflict(shelve_file[row.keys()[0]], row[row.keys()[0]], 'A_HEADER')
 		else:
 			# Just write
