@@ -26,30 +26,16 @@ def buildRowDict(row, headers, id_column):
 		row_dict[row_id][headers[i]] = cell
 	return row_dict
 
-def buildShelveFile(shelf_file_path, sheet, id_column):
+def buildShelveFile(shelf_file_path, sheet, id_column, test=False):
 	shelve_file = shelve.open(shelf_file_path)
 	headers = getHeaders(sheet)
 	for row in getRowData(sheet):
 		row = buildRowDict(row, headers, id_column)
-
-			# conflict resolver on some other ChARACTERISTIC??
-		# id conflict resolver ....
-		'''
-		# HERE check id of column, if same, check timestamp
-		# of shelved version ...
-		# if shelve_file.has_key... ? check timestamp
-		'''
-		#THIS bit here more useful as automatically overwrites.
-		# ... and, if there are NO CONFLICTS, 
-		#doesn't care that it overwrites
-
-		# Assuming there are duplications... make more
-		# general
+		resolveConfict = chooseBetween
 		
 		if row.keys()[0].encode('ascii') in shelve_file:
-			# resolve conflict
-			''''''
-			#shelve_file['thing'] = 'thong'
+			if not test: # Prevents the chooseBetween function from working to test should_not_overwrite option
+				shelve_file[row.keys()[0]] = resolveConflict(shelve_file[row.keys()[0]], row[row.keys()[0]], 'A_HEADER')
 		else:
 			# Just write
 			shelve_file[row.keys()[0]] = row[row.keys()[0]]
@@ -58,47 +44,12 @@ def buildShelveFile(shelf_file_path, sheet, id_column):
 	shelve_file.close()
 
 
-def chooseBetween(shelve_file, row, column_to_compare, select='greater'):
-	clash_id_in_shelve = shelve_file[row.keys()[0]]
+
+def chooseBetween(shelve_file_row, row, column_to_compare, select='greater'):
+	shelf_row = shelve_file_row
+	new_row = row
+
+	if shelf_row[column_to_compare] < new_row[column_to_compare] and select == 'greater':
+		return new_row
 
 
-#buildShelveFile('test/test_tmp/test_clash.shelve', sheet, 'ID')
-
-
-#print(getRowData(sheet))
-
-
-# OK, so shelf func goes somthing like:
-#
-#for row in getRowData(sheet):
-#		convert row into dict, by wrapping in buildRowDict function
-# 	CHECK SHELF FOR SAME NAME && if same page and later timestamp...
-#		add to shelf.
-
-# yes...
-
-
-#for row in getRowData(sheet):
-#	print row
-'''
-
-def getDataDict(sheet):
-	headers = getHeaders(sheet)
-	rows = getRowData(sheet)
-	data_dict = {}
-	
-	# for each row, create new dict
-	# for each cell in row, add header and value
-
-	# USE THIS CODE TO WRITE SERIALLY TO SHELF...
-	
-	for row_index, row in enumerate(rows):
-		row_dict = {}
-		for col_index in range(sheet.ncols):
-			row_dict[headers[col_index]] = sheet.cell(row_index+1, col_index).value
-		data_dict[row_index] = row_dict
-
-	return data_dict
-
-print getDataDict(sheet)
-'''
