@@ -11,7 +11,7 @@ import corpusbuilder.extractToShelve as extract
 class TestBuildCorpus:
 
 	def setup(self):
-		workbook = xlrd.open_workbook('test.xlsx')
+		workbook = xlrd.open_workbook('test/test_sheets/test_simple.xlsx')
 		self.sheet = workbook.sheet_by_index(0)
 		self.id_column = 'ID'
 
@@ -31,14 +31,14 @@ class TestBuildCorpus:
 
 	def test_buildShelveFile_should_create_corpus_shelve_file(self):
 			# build shelf file
-		shelve_file_path = 'tmp/test.shelve'
+		shelve_file_path = 'test/test_tmp/test.shelve'
 		extract.buildShelveFile(shelve_file_path, self.sheet, self.id_column) # call the function to be tested
 		assert os.path.isfile(shelve_file_path) == True
 		os.remove(shelve_file_path) 
 
 	def test_buildShelveFile_should_write_properly(self):
 		# build shelf file
-		shelve_file_path = 'tmp/test.shelve'
+		shelve_file_path = 'test/test_tmp/test.shelve'
 		extract.buildShelveFile(shelve_file_path, self.sheet, self.id_column) # call the function to be tested
 		assert shelve.open(shelve_file_path) == { 'id_1' : { u'A_HEADER' : u'a_value', u'B_HEADER': u'b_value', u'ID': u'id_1' },
 																							'id_2' : { u'A_HEADER' : u'a_value2', u'B_HEADER': u'b_value2', u'ID': u'id_2' }

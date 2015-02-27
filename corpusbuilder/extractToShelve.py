@@ -1,8 +1,9 @@
 import shelve
 import xlrd as xlrd
 
-workbook = xlrd.open_workbook('test.xlsx')
-sheet = workbook.sheet_by_index(0)
+#MOVE THESE TO MAIN!!
+#workbook = xlrd.open_workbook('test/test_sheets/test_simple.xlsx')
+#sheet = workbook.sheet_by_index(0)
 
 def getHeaders(sheet):
 	headers = [sheet.cell(0, col_index).value for col_index in range(sheet.ncols)]
@@ -14,7 +15,6 @@ def getRowData(sheet):
 		row = [sheet.cell(i, col_index).value for col_index in range(sheet.ncols)]
 		# Generator yields row at a time ...
 		yield row
-
 
 def buildRowDict(row, headers, id_column):
 	# this line here... no need to do this every time?
