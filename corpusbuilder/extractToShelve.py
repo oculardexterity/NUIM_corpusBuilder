@@ -58,6 +58,8 @@ def buildShelveFile(shelf_file_path, sheet, id_column):
 	shelve_file.close()
 
 
+def chooseBetween(shelve_file, row, column_to_compare, select='greater'):
+	clash_id_in_shelve = shelve_file[row.keys()[0]]
 
 
 #buildShelveFile('test/test_tmp/test_clash.shelve', sheet, 'ID')
