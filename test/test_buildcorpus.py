@@ -56,7 +56,7 @@ class TestBuildCorpus:
 	
 	def test_chooseBetween_should_choose_correct(self):
 		shelve_file_row =  { u'A_HEADER' : u'a_value', u'B_HEADER': u'b_value', u'ID': u'id_1' } 
-		row = 						{ u'A_HEADER' : u'a_value2', u'B_HEADER': u'b_value2', u'ID': u'id_1' } 
+		row = 						 { u'A_HEADER' : u'a_value2', u'B_HEADER': u'b_value2', u'ID': u'id_1' } 
 		assert extract.chooseBetween(shelve_file_row, row, 'A_HEADER') == row
 
 	def test_chooseBetween_with_datetime_should_choose_correct(self):
