@@ -25,6 +25,9 @@ class Corpus():
 	def __getitem__(self, k):
 		return k
 
+	def __len__(self):
+		return len(self.shelve_file)
+
 class CorpusObject(Bunch):
 	def __init__(self, item):
 		super(CorpusObject, self).__init__(**item)
@@ -34,7 +37,10 @@ class CorpusObject(Bunch):
 
 if __name__ == '__main__':
 	corpus = Corpus('corpus/corpus.shelve')
+
 	for item in corpus:
 		#if item.Letter == 200:
 		print '----' + str(item.Page) + '----' + str(item.Letter)
 		print item.text()
+
+	print '................................\n', len(corpus)

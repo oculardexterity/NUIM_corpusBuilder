@@ -11,69 +11,64 @@ import corpusbuilder.extractToShelve as extract
 class TestBuildCorpus:
 
 	def setup(self):
-		self.test_simple_workbook = xlrd.open_workbook('test/test_sheets/test_simple.xlsx')
-		self.test_simple_sheet = self.test_simple_workbook.sheet_by_index(0)
-		
-		self.test_id_clash_workbook = xlrd.open_workbook('test/test_sheets/test_id_clash.xlsx')
-		self.test_id_clash_sheet = self.test_id_clash_workbook.sheet_by_index(0)
-
-		self.test_datetime_id_clash_workbook = xlrd.open_workbook('test/test_sheets/test_datetime.xlsx')
-		self.test_datetime_id_clash_workbook = self.test_datetime_id_clash_workbook.sheet_by_index(0)
-		
 		self.id_column = 'ID'
 
-		self.shelve_file_path = 'test/test_tmp/test.shelve'
+		self.shelve_path = 'test/test_tmp/test.shelve'
+
+		self.extractSimple = extract.Extractor('test/test_sheets/test_simple.xlsx', self.shelve_path, self.id_column)
+		self.extractClash = extract.Extractor('test/test_sheets/test_id_clash.xlsx', self.shelve_path, self.id_column)
+		self.extractDatetime = extract.Extractor('test/test_sheets/test_datetime.xlsx', self.shelve_path, self.id_column)
+
 
 	def teardown(self):
-		if os.path.isfile(self.shelve_file_path):
-			os.remove(self.shelve_file_path) 
+		if os.path.isfile(self.shelve_path):
+			os.remove(self.shelve_path) 
 
 	def test_getHeaders(self):
-		assert extract.getHeaders(self.test_simple_sheet) == ['A_HEADER', 'B_HEADER', u'ID']
+		assert self.extractSimple.getHeaders() == ['A_HEADER', 'B_HEADER', u'ID']
 
 	def test_getRowData(self):
-		assert list(extract.getRowData(self.test_simple_sheet)) == [[u'a_value', u'b_value', u'id_1'],[u'a_value2', u'b_value2', u'id_2']]
+		assert list(self.extractSimple.getRowData()) == [[u'a_value', u'b_value', u'id_1'],[u'a_value2', u'b_value2', u'id_2']]
 
 
 	def test_buildRowDict(self):
 		row = [u'a_value', u'b_value', u'id_1']
-		headers = [u'A_HEADER', u'B_HEADER', u'ID']
-		assert extract.buildRowDict(row, headers, self.id_column) == { 'id_1' : { u'A_HEADER' : u'a_value', u'B_HEADER': u'b_value', u'ID': u'id_1' }}
+		print self.extractSimple.buildRowDict(row)
+		assert self.extractSimple.buildRowDict(row) == { 'id_1' : { u'A_HEADER' : u'a_value', u'B_HEADER': u'b_value', u'ID': u'id_1' }}
 		# with the id_column value as the key
 
 	def test_buildShelveFile_should_create_corpus_shelve_file(self):
-		extract.buildShelveFile(self.shelve_file_path, self.test_simple_sheet, self.id_column) # call the function to be tested
-		assert os.path.isfile(self.shelve_file_path) == True
-		os.remove(self.shelve_file_path) 
+		self.extractSimple.buildShelveFile() # call the function to be tested
+		assert os.path.isfile(self.shelve_path) == True
+		os.remove(self.shelve_path) 
 
 	def test_buildShelveFile_should_write_properly(self):
-		extract.buildShelveFile(self.shelve_file_path, self.test_simple_sheet, self.id_column) # call the function to be tested
-		assert shelve.open(self.shelve_file_path) == { 'id_1' : { u'A_HEADER' : u'a_value', u'B_HEADER': u'b_value', u'ID': u'id_1' },
+		self.extractSimple.buildShelveFile() # call the function to be tested
+		assert shelve.open(self.shelve_path) == { 'id_1' : { u'A_HEADER' : u'a_value', u'B_HEADER': u'b_value', u'ID': u'id_1' },
 																							'id_2' : { u'A_HEADER' : u'a_value2', u'B_HEADER': u'b_value2', u'ID': u'id_2' }
 																						}
-		os.remove(self.shelve_file_path)
+		os.remove(self.shelve_path)
 
 	def test_buildCorpusShelve_should_not_overwrite_existing_key(self):
-		extract.buildShelveFile(self.shelve_file_path, self.test_id_clash_sheet, self.id_column, test=True) # builds pickle
-		assert shelve.open(self.shelve_file_path) != { u'id_1' : { u'A_HEADER' : u'a_value2', u'B_HEADER': u'b_value2', u'ID': u'id_1' } }
-		os.remove(self.shelve_file_path)
+		self.extractClash.buildShelveFile(test=True) # builds pickle
+		assert shelve.open(self.shelve_path) != { u'id_1' : { u'A_HEADER' : u'a_value2', u'B_HEADER': u'b_value2', u'ID': u'id_1' } }
+		os.remove(self.shelve_path)
 
-	## TEST ^^ WORKS TOTALLY ... i.e. give it a sheet with conflict, check result.
 	
 	def test_buildCorpusShelve_should_overwrite_if_duplicate(self):
-		extract.buildShelveFile(self.shelve_file_path, self.test_datetime_id_clash_workbook, self.id_column, 'DT', test=False)
-		assert shelve.open(self.shelve_file_path) == { 'id_1' : { u'DT' : 41581.50037037037, u'A_HEADER' : u'a_value2', u'B_HEADER': u'b_value2', u'ID': u'id_1' }  }
-		os.remove(self.shelve_file_path)
+		self.extractDatetime.buildShelveFile('DT', test=False)
+		assert shelve.open(self.shelve_path) == { 'id_1' : { u'DT' : 41581.50037037037, u'A_HEADER' : u'a_value2', u'B_HEADER': u'b_value2', u'ID': u'id_1' }  }
+		os.remove(self.shelve_path)
 
 	def test_chooseBetween_should_choose_correct(self):
 		shelve_file_row =  { u'A_HEADER' : u'a_value', u'B_HEADER': u'b_value', u'ID': u'id_1' } 
 		row = 						 { u'A_HEADER' : u'a_value2', u'B_HEADER': u'b_value2', u'ID': u'id_1' } 
-		assert extract.chooseBetween(shelve_file_row, row, 'A_HEADER') == row
+		assert self.extractSimple.chooseBetween(shelve_file_row, row, 'A_HEADER') == row
 
 	def test_chooseBetween_with_datetime_should_choose_correct(self):
 		shelve_file_row =  { u'DT' : 41547.59240740741, u'B_HEADER': u'b_value', u'ID': u'id_1' } 
 		row = 						{ u'DT' : 41581.50037037037, u'B_HEADER': u'b_value2', u'ID': u'id_1' } 
-		assert extract.chooseBetween(shelve_file_row, row, 'DT') == row
+		assert self.extractSimple.chooseBetween(shelve_file_row, row, 'DT') == row
 
 
 
