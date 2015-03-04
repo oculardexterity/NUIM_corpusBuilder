@@ -6,7 +6,7 @@ import shelve
 import xlrd as xlrd
 
 # Import module to test
-import corpusbuilder.extractToShelve as extract
+import corpusbuilder.Extractor as extract
 
 class TestBuildCorpus:
 

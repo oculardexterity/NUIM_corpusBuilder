@@ -4,8 +4,8 @@ import shelve
 import xlrd
 
 # module to test
-from corpusbuilder.corpus import Corpus
-from corpusbuilder import extractToShelve as extract
+from corpusbuilder.Corpus import Corpus
+from corpusbuilder import Extractor as extract
 
 class TestCorpus:
 
