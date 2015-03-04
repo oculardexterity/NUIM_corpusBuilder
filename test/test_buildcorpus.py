@@ -16,10 +16,17 @@ class TestBuildCorpus:
 		
 		self.test_id_clash_workbook = xlrd.open_workbook('test/test_sheets/test_id_clash.xlsx')
 		self.test_id_clash_sheet = self.test_id_clash_workbook.sheet_by_index(0)
+
+		self.test_datetime_id_clash_workbook = xlrd.open_workbook('test/test_sheets/test_datetime.xlsx')
+		self.test_datetime_id_clash_workbook = self.test_datetime_id_clash_workbook.sheet_by_index(0)
+		
 		self.id_column = 'ID'
 
 		self.shelve_file_path = 'test/test_tmp/test.shelve'
 
+	def teardown(self):
+		if os.path.isfile(self.shelve_file_path):
+			os.remove(self.shelve_file_path) 
 
 	def test_getHeaders(self):
 		assert extract.getHeaders(self.test_simple_sheet) == ['A_HEADER', 'B_HEADER', u'ID']
@@ -52,16 +59,20 @@ class TestBuildCorpus:
 		os.remove(self.shelve_file_path)
 
 	## TEST ^^ WORKS TOTALLY ... i.e. give it a sheet with conflict, check result.
-		
 	
+	def test_buildCorpusShelve_should_overwrite_if_duplicate(self):
+		extract.buildShelveFile(self.shelve_file_path, self.test_datetime_id_clash_workbook, self.id_column, 'DT', test=False)
+		assert shelve.open(self.shelve_file_path) == { 'id_1' : { u'DT' : 41581.50037037037, u'A_HEADER' : u'a_value2', u'B_HEADER': u'b_value2', u'ID': u'id_1' }  }
+		os.remove(self.shelve_file_path)
+
 	def test_chooseBetween_should_choose_correct(self):
 		shelve_file_row =  { u'A_HEADER' : u'a_value', u'B_HEADER': u'b_value', u'ID': u'id_1' } 
 		row = 						 { u'A_HEADER' : u'a_value2', u'B_HEADER': u'b_value2', u'ID': u'id_1' } 
 		assert extract.chooseBetween(shelve_file_row, row, 'A_HEADER') == row
 
 	def test_chooseBetween_with_datetime_should_choose_correct(self):
-		shelve_file_row =  { u'DT' : u'xldate:41547.59240740741', u'B_HEADER': u'b_value', u'ID': u'id_1' } 
-		row = 						{ u'DT' : u'xldate:41581.50037037037', u'B_HEADER': u'b_value2', u'ID': u'id_1' } 
+		shelve_file_row =  { u'DT' : 41547.59240740741, u'B_HEADER': u'b_value', u'ID': u'id_1' } 
+		row = 						{ u'DT' : 41581.50037037037, u'B_HEADER': u'b_value2', u'ID': u'id_1' } 
 		assert extract.chooseBetween(shelve_file_row, row, 'DT') == row
 
 
