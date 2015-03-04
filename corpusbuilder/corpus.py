@@ -1,6 +1,19 @@
 import shelve
 import extractToShelve as extract
 
+
+class bcolors:
+    HEADER = '\033[95m'
+    OKBLUE = '\033[94m'
+    OKGREEN = '\033[92m'
+    WARNING = '\033[93m'
+    FAIL = '\033[91m'
+    ENDC = '\033[0m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
+
+    
+
 class Bunch(dict):
 	def __init__(self, **kw):
 		dict.__init__(self, kw)
@@ -28,6 +41,9 @@ class Corpus():
 	def __len__(self):
 		return len(self.shelve_file)
 
+
+
+
 class CorpusObject(Bunch):
 	def __init__(self, item):
 		super(CorpusObject, self).__init__(**item)
@@ -46,8 +62,9 @@ if __name__ == '__main__':
 	corpus = Corpus('corpus/corpus.shelve')
 
 	for item in corpus:
+		if len(item.text()) < 50:
 		#if item.Letter == 200:
-		print '----' + str(item.Page) + '----' + str(item.Letter)
-		print item.text()
+			print bcolors.HEADER + '----' + str(item.Page) + '----' + str(item.Letter) + bcolors.ENDC
+			print item.text()
 
 	print '................................\n', len(corpus)

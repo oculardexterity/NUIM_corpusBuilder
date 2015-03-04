@@ -3,11 +3,6 @@ import shelve
 import xlrd as xlrd
 
 
-
-#MOVE THESE TO MAIN!!
-
-
-
 class Extractor:
 	def __init__(self, sheet_path, shelve_path, id_column):
 		self.sheet = xlrd.open_workbook(sheet_path).sheet_by_index(0)
@@ -27,9 +22,7 @@ class Extractor:
 			yield row
 
 	def buildRowDict(self, row): #row, headers, id_column):
-		# this line here... no need to do this every time?
 		id_index = self.headers.index(self.id_column)
-
 		row_id = str(row[id_index])
 		row_dict = { row_id: {} }
 		for i, cell in enumerate(row):
@@ -39,7 +32,8 @@ class Extractor:
 
 
 	# MAIN FUNCTION OF THE SHOW....
-	def buildShelveFile(self, conflict_res_column=False, test=False): #and conflict_res_order
+	def buildShelveFile(self, conflict_res_column=False, test=False):
+		# Kills old shelve files if existing
 		if os.path.isfile(self.shelve_path):
 				os.remove(self.shelve_path)
 
@@ -51,13 +45,11 @@ class Extractor:
 
 			current_row_key = str(row.keys()[0].encode('ascii'))
 
-
 			if current_row_key in shelve_file:
 				if not test: # Prevents the chooseBetween function from working to test should_not_overwrite_existing
-					#print 'FOUND TRUE'
+
 					row_to_write = self.chooseBetween(shelve_file[current_row_key], row[current_row_key], conflict_res_column)
 					shelve_file[current_row_key] = row_to_write
-
 			else:
 				shelve_file[current_row_key] = row[current_row_key]
 			
