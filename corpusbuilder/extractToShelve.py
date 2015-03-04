@@ -40,7 +40,7 @@ def buildShelveFile(shelf_file_path, sheet, id_column, conflict_res_column=0, te
 
 	shelve_file = shelve.open(shelf_file_path)
 	headers = getHeaders(sheet)
-	count = 0
+
 	for row in getRowData(sheet):
 		row = buildRowDict(row, headers, id_column)
 
@@ -52,7 +52,7 @@ def buildShelveFile(shelf_file_path, sheet, id_column, conflict_res_column=0, te
 				#print 'FOUND TRUE'
 
 				row_to_write = chooseBetween(shelve_file[current_row_key], row[current_row_key], conflict_res_column)
-				print "ROW TO WRITE: ", row_to_write
+
 				shelve_file[current_row_key] = row_to_write
 				#print 'replace'
 		else:
@@ -62,10 +62,10 @@ def buildShelveFile(shelf_file_path, sheet, id_column, conflict_res_column=0, te
 			#print 'write'
 		#print 'SHELF AFTER ', shelve_file[current_row_key], type(shelve_file)
 
-		count += 1
+	
 
 
-def chooseBetween(shelf_row, new_row, column_to_compare, select='greater'):
+def chooseBetween(shelf_row, new_row, column_to_compare):
 	#print 'CHOOSEBETWEENROW: ', shelf_row['Translation_Timestamp']
 	#print 'NEW_ROW ', new_row['Translation_Timestamp']
 	#print shelf_row
