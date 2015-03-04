@@ -85,7 +85,7 @@ def chooseBetween(shelf_row, new_row, column_to_compare):
 	"""
 
 def main():
-	buildShelveFile(shelveFile, sheet, id_column, 'Page')
+	buildShelveFile(shelveFile, sheet, id_column, 'Translation_Timestamp')
 
 
 if __name__ == "__main__":
