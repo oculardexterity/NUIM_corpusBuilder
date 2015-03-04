@@ -15,8 +15,8 @@ class Bunch(dict):
 
 
 class Corpus():
-	def __init__(self, shelve_path, text_key):
-		self.shelve_file = shelve.open(shelve_path)
+	def __init__(self, shelve_file_path):
+		self.shelve_file = shelve.open(shelve_file_path)
 
 	def __iter__(self):
 		for key, value in sorted(self.shelve_file.items()):
@@ -34,7 +34,7 @@ class CorpusObject(Bunch):
 	
 	def text(self):
 		try:
-			return self.text_key
+			return self.Translation
 		except AttributeError:
 			raise AttributeError("This corpus does not have a text property")
 

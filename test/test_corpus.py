@@ -19,7 +19,7 @@ class TestCorpus:
 		self.extractSimple.buildShelveFile(test=True)
 
 		# Init
-		self.corpus = Corpus(self.shelve_path, 'Translation')
+		self.corpus = Corpus(self.shelve_path)
 
 	def teardown(self):
 		os.remove(self.shelve_path)
