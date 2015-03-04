@@ -15,15 +15,15 @@ class Bunch(dict):
 
 
 class Corpus():
-	def __init__(self, shelve_file_path):
-		self.shelve_file = shelve.open(shelve_file_path)
+	def __init__(self, shelve_path, text_key):
+		self.shelve_file = shelve.open(shelve_path)
 
 	def __iter__(self):
 		for key, value in sorted(self.shelve_file.items()):
 			yield CorpusObject(value)
 
 	def __getitem__(self, k):
-		return k
+		return CorpusObject(self.shelve_file[k])
 
 	def __len__(self):
 		return len(self.shelve_file)
@@ -33,7 +33,14 @@ class CorpusObject(Bunch):
 		super(CorpusObject, self).__init__(**item)
 	
 	def text(self):
-		return self.Translation
+		try:
+			return self.text_key
+		except AttributeError:
+			raise AttributeError("This corpus does not have a text property")
+
+
+
+
 
 if __name__ == '__main__':
 	corpus = Corpus('corpus/corpus.shelve')
