@@ -15,11 +15,10 @@ class Merge():
 
 
 	def merge(self):
-		#if os.path.isfile(self.new_shelve_path):
-		#		os.remove(self.new_shelve_path)
-
+		if os.path.isfile(self.new_shelve_path):
+				os.remove(self.new_shelve_path)
+	
 		old_shelve = shelve.open(self.old_shelve_path)
-
 		new_shelve = shelve.open(self.new_shelve_path)
 
 		for key, row in sorted(old_shelve.items()):
@@ -32,7 +31,6 @@ class Merge():
 
 			 
 				row[self.merge_column] = new_shelve[current_row_key][self.merge_column] + '--------------' + row[self.merge_column]
-				#print row
 				new_shelve[current_row_key] = row
 			else:
 				print 'no'
