@@ -27,19 +27,19 @@ class Merge():
 			#print 'CRK: ' +  current_row_key
 
 			if current_row_key in new_shelve:
-				print 'yes'
+			
 
 			 
 				row[self.merge_column] = new_shelve[current_row_key][self.merge_column] + '--------------' + row[self.merge_column]
 				new_shelve[current_row_key] = row
 			else:
-				print 'no'
+			
 				new_shelve[current_row_key] = row
 			
-			print new_shelve
+			
 
 def main():
-	merge = Merge('test/test_tmp/test.shelve', 'LetterID', 'merge_column', 'test/test_tmp/new_test.shelve')
+	merge = Merge('corpus/corpus.shelve', 'Letter', 'Translation', 'corpus/letter_corpus.shelve')
 	merge.merge()
 
 if __name__ == "__main__":

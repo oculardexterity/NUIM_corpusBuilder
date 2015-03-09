@@ -59,11 +59,9 @@ class CorpusObject(Bunch):
 
 
 if __name__ == '__main__':
-	corpus = Corpus('corpus/corpus.shelve')
+	corpus = Corpus('corpus/letter_corpus.shelve')
 
 	for item in corpus:
-		if len(item.text()) < 50:
-		#if item.Letter == 200:
 			print bcolors.HEADER + '----' + str(item.DATE_created) + '----' + str(item.Letter) + bcolors.ENDC
 			print item.text()
 
