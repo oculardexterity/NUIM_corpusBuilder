@@ -48,5 +48,6 @@ class TestCorpus:
 		# Do this test properly...!
 
 	def test_corpus_sorted_returns_pages_in_order(self):
-		assert 1 == 1
+		assert list(self.corpus.__iter__()) == [{u'A_HEADER': u'a_value', u'ID': u'id_1', u'B_HEADER': u'b_value'}, {u'A_HEADER': u'a_value2', u'ID': u'id_2', u'B_HEADER': u'b_value2'}]
+		assert list(self.corpus.__iter__()) != [{u'A_HEADER': u'a_value2', u'ID': u'id_2', u'B_HEADER': u'b_value2'}, {u'A_HEADER': u'a_value', u'ID': u'id_1', u'B_HEADER': u'b_value'}]
 		# Write this test

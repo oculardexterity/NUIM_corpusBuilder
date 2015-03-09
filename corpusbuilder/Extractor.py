@@ -52,9 +52,6 @@ class Extractor:
 					shelve_file[current_row_key] = row_to_write
 			else:
 				shelve_file[current_row_key] = row[current_row_key]
-			
-
-		
 
 
 	def chooseBetween(self, shelf_row, new_row, column_to_compare):
