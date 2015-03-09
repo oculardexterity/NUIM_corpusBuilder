@@ -3,7 +3,7 @@ from Corpus import Corpus as Corpus
 import shelve
 import os
 
-class Merge():
+class FixCorpus():
 
 	def __init__(self, old_shelve_path, new_id, merge_column, new_shelve_path):
 		self.old_shelve_path = old_shelve_path
@@ -27,9 +27,7 @@ class Merge():
 			#print 'CRK: ' +  current_row_key
 
 			if current_row_key in new_shelve:
-			
-
-			 
+						 
 				row[self.merge_column] = new_shelve[current_row_key][self.merge_column] + '--------------' + row[self.merge_column]
 				new_shelve[current_row_key] = row
 			else:
