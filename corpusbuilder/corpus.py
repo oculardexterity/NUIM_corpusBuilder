@@ -12,7 +12,7 @@ class bcolors:
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
 
-    
+
 
 class Bunch(dict):
 	def __init__(self, **kw):
@@ -64,7 +64,7 @@ if __name__ == '__main__':
 	for item in corpus:
 		if len(item.text()) < 50:
 		#if item.Letter == 200:
-			print bcolors.HEADER + '----' + str(item.Page) + '----' + str(item.Letter) + bcolors.ENDC
+			print bcolors.HEADER + '----' + str(item.DATE_created) + '----' + str(item.Letter) + bcolors.ENDC
 			print item.text()
 
 	print '................................\n', len(corpus)
