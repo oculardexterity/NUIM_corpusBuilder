@@ -17,6 +17,8 @@ class TransformCorpus():
 	def merge(self):
 		if os.path.isfile(self.new_shelve_path):
 				os.remove(self.new_shelve_path)
+
+	
 	
 		old_shelve = shelve.open(self.old_shelve_path)
 		new_shelve = shelve.open(self.new_shelve_path)
