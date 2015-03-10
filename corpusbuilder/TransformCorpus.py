@@ -1,6 +1,7 @@
 
 from Corpus import Corpus as Corpus
 
+import datetime
 import os
 import re
 import shelve
@@ -51,6 +52,11 @@ class TransformCorpus():
 
 
 	def stripTags(self, column_to_strip):
+		""" 
+		stripTags function builds new corpus file with one field stripped
+		Inputs:
+			column_to_strip: the column to remove tags from
+		"""
 		self.before_transform('stripTags')
 
 		old_shelve = shelve.open(self.old_shelve_path)
@@ -75,8 +81,24 @@ class TransformCorpus():
 				strg = "".join(lst)
 		return strg
 
+	def mergeByDateRange(self):
+		""""""
 
+	def dateRanges(self, dRange, interval):
+		start_date = dRange[0]
+		end_date = dRange[1]
 
+		date_range_list = []
+
+		working_date = start_date
+
+		while working_date < end_date:
+			next_working_date = working_date + datetime.timedelta(days=7)
+			new_range = (working_date, next_working_date)
+			date_range_list.append(new_range)
+			working_date = next_working_date
+
+		return date_range_list
 
 	
 

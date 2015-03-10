@@ -5,6 +5,7 @@ from corpusbuilder.Corpus import Corpus
 from corpusbuilder.Extractor import Extractor as Extractor
 from corpusbuilder.TransformCorpus import TransformCorpus as TransformCorpus
 
+import datetime
 import os
 import shelve
 
@@ -57,3 +58,15 @@ class TestMerge:
 																						 {'ID_COLUMN': 'id2', 'TEXT': 'Ok, this is a string.'},
 																						 {'ID_COLUMN': 'id3', 'TEXT': 'And there are many'}
 																						]
+
+	def test_mergeByDateRange(self):
+		assert 1 == 1
+
+	def test_dateRanges(self):
+		self.TransformCorpus_daterange = TransformCorpus(self.shelve_path + 'dangerangetest.shelve', test=True)
+		start_date = datetime.date(1991, 01, 01)
+		end_date = datetime.date(1991, 01, 15)
+		date_range = (start_date, end_date)
+		interval = datetime.timedelta(days=7)
+		assert self.TransformCorpus_daterange.dateRanges(date_range, interval) == [(start_date,datetime.date(1991, 1, 8)),
+																																								(datetime.date(1991, 1, 8), end_date)]
