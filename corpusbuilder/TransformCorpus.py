@@ -81,8 +81,42 @@ class TransformCorpus():
 				strg = "".join(lst)
 		return strg
 
-	def mergeByDateRange(self):
+	def mergeByDateRange(self, date_column, date_range, interval):
 		""""""
+		self.before_transform('mergeByDateRange')
+
+		old_shelve = shelve.open(self.old_shelve_path)
+		new_shelve = shelve.open(self.new_shelve_path)
+
+
+		for daterange in self.dateRanges(date_range, interval):
+			dr_string = str(daterange[0]) + '---' + str(daterange[1])
+			new_shelve[dr_string] = {'DateRange': dr_string, 'Translation': "" }
+
+			for key, row in old_shelve.items():
+				#print row[date_column]
+				try:
+					current_row_date = datetime.datetime.strptime(row[date_column], '%Y-%m-%d').date()
+					if daterange[0] <= current_row_date < daterange[1]:
+						#print daterange[0], daterange[1]
+						#print row['Translation']
+						updated_row = {'DateRange': dr_string, 'Translation': new_shelve[dr_string]['Translation'] + row['Translation']}
+						new_shelve[dr_string] = updated_row
+				except:
+					pass
+				
+					
+				
+
+					
+
+
+		print new_shelve 
+
+
+		
+
+
 
 	def dateRanges(self, dRange, interval):
 		start_date = dRange[0]
@@ -139,8 +173,14 @@ class TransformCorpus():
 			
 
 def main():
-	transform = TransformCorpus('corpus/corpus_merge.shelve')
-	transform.stripTags('Translation')
+	transform = TransformCorpus('corpus/corpus_merge_stripTags.shelve')
+	
+
+	start_date = datetime.date(1915, 11, 01)
+	end_date = datetime.date(1916, 10, 31)
+	date_range = (start_date, end_date)
+	interval = datetime.timedelta(days=7)
+	transform.mergeByDateRange('DATE_created', date_range, interval)
 
 if __name__ == "__main__":
 	main()

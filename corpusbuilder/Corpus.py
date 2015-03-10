@@ -62,10 +62,10 @@ class CorpusObject(Bunch):
 
 
 if __name__ == '__main__':
-	corpus = Corpus('corpus/corpus_merge_stripTags.shelve')
+	corpus = Corpus('corpus/corpus_merge_stripTags_mergeByDateRange.shelve')
 
 	for item in corpus:
-			print bcolors.HEADER + '----' + str(item.DATE_created) + '----' + str(item.Letter) + bcolors.ENDC
+			print bcolors.HEADER + item.DateRange + bcolors.ENDC
 			print item.text()
 
 	print '................................\n', len(corpus)
