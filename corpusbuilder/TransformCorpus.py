@@ -1,7 +1,9 @@
 
 from Corpus import Corpus as Corpus
-import shelve
+
 import os
+import re
+import shelve
 
 class TransformCorpus():
 
@@ -9,7 +11,16 @@ class TransformCorpus():
 		self.old_shelve_path = old_shelve_path
 		self.new_shelve_path = new_shelve_path
 		self.test = test
-	
+		
+		self.CLEANING_PATTERN = [("no-group", "<unclear>questionable reading</unclear>"), # appeared in letter 1004 several times
+                    ("no-group", "<[/\w\d\s\"\'=]+>|<!--[/\w\d\s\"\'=\.,-]+-->"),
+                    #("no-group", "[\d\.]+[ap]m"), #remove times e.g. 5pm or 4.30pm
+                    #("no-group", "\'s"), #remove Gen. 's' e.g. Paul's
+                    #("no-group", "[\d/'\.]+"),
+                    #("no-group", "\s(\w\.)+\s"),
+                    #("no-group", "&[#\w\d]+;"), 
+                    #("use-group", "[\W]*(\w+[\w\'-/\.]*\w+|\w|&)[\W]*")
+                     ] # 1916 letter cleaning pattern
 
 
 	def merge(self, new_id, merge_column, break_string = "<pb/>"):
@@ -39,9 +50,45 @@ class TransformCorpus():
 
 
 
-	def strip_tags(self):
-		''''''
+	def stripTags(self, column_to_strip):
+		self.before_transform('stripTags')
+
+		old_shelve = shelve.open(self.old_shelve_path)
+		new_shelve = shelve.open(self.new_shelve_path)
+
+		for key, row in sorted(old_shelve.items()):
+			row[column_to_strip] = self.tagStripper(row[column_to_strip])
+			new_shelve[key] = row
 	
+	def tagStripper(self, strg):
+		# By gods, complex... work out how this works later
+		for typeOf, pat in self.CLEANING_PATTERN:
+			if typeOf == "no-group":
+				strg = "".join(re.split(pat , strg))
+			elif typeOf == "use-group":
+				regex = re.compile(pat)
+				lst = []
+				for item in strg.split():
+					mm = regex.match(item)
+					if mm:
+						lst.append(mm.group(1))
+				strg = "".join(lst)
+		return strg
+
+
+
+
+	
+
+
+
+
+
+
+
+
+
+
 
 
 	def before_transform(self, transform_name):
@@ -70,8 +117,8 @@ class TransformCorpus():
 			
 
 def main():
-	transform = TransformCorpus('corpus/corpus.shelve')
-	transform.merge('Letter', 'Translation')
+	transform = TransformCorpus('corpus/corpus_merge.shelve')
+	transform.stripTags('Translation')
 
 if __name__ == "__main__":
 	main()
