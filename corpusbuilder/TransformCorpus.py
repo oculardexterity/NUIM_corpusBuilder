@@ -21,7 +21,8 @@ class TransformCorpus():
 			break_string: string for marking the join on merge (e.g. a <pb/> tag)
 
 		"""
-		#
+		
+		# Determines new shelve file. If unspecified, use old with _merge appended
 		if self.new_shelve_path == "":
 			self.new_shelve_path = self.old_shelve_path.split(".")[0] + '_merge.shelve'
 
@@ -30,22 +31,21 @@ class TransformCorpus():
 			raise Exception('Merge halted to prevent overwrite')
 			return
 
-	
+		# Opens old and new shelve files
 		old_shelve = shelve.open(self.old_shelve_path)
 		new_shelve = shelve.open(self.new_shelve_path)
 
 		for key, row in sorted(old_shelve.items()):
-
 			current_row_key = str(row[new_id]).encode('ascii')
 			#print 'CRK: ' +  current_row_key
-
-			if current_row_key in new_shelve:
-						 
+			if current_row_key in new_shelve:	 
 				row[merge_column] = new_shelve[current_row_key][merge_column] + break_string + row[merge_column]
 				new_shelve[current_row_key] = row
 			else:
-			
 				new_shelve[current_row_key] = row
+
+	def strip_tags(self):
+		''''''
 	
 
 	def prevent_overwrite(self, the_file):

@@ -15,14 +15,13 @@ class TestMerge:
 	
 		self.shelve_path = 'test/test_tmp/'
 
-		self.extracted = Extractor('test/test_sheets/test_letter_merge.xlsx', self.shelve_path + 'test.shelve', 'PageID')
-		self.extracted.buildShelveFile('DT')
+		self.extracted_merge = Extractor('test/test_sheets/test_letter_merge.xlsx', self.shelve_path + 'test.shelve', 'PageID')
+		self.extracted_merge.buildShelveFile('DT')
 
-		#self.new_shelve_path = 'test/test_tmp/new_test.shelve'
+		self.TransformCorpus_merge = TransformCorpus(self.shelve_path + 'test.shelve', test=True)
 
-		self.TransformCorpus = TransformCorpus(self.shelve_path + 'test.shelve', test=True)
-
-		self.break_string = "<pb/>"
+		self.extracted_strip = Extractor() ## Do some stuff to this extractor
+		self.TransformCorpus_strip = TransformCorpus(self.shelve_path + 'strip_test.shelve', test=True)
 	
 	def teardown(self):
 		if os.path.isfile(self.shelve_path + 'test_merge.shelve'):
@@ -32,7 +31,7 @@ class TestMerge:
 	
 
 	def test_merge(self):
-		self.TransformCorpus.merge('LetterID', 'merge_column')
+		self.TransformCorpus_merge.merge('LetterID', 'merge_column')
 		new_corpus = Corpus(self.shelve_path + 'test_merge.shelve')
 		assert list(new_corpus.__iter__()) == [{u'DT': 41583.50037037037, u'PageID': u'page_ID2', u'A_HEADER': u'a_value3', u'merge_column': u'MergePart1<pb/>MergePart2', u'LetterID': u'letterID'}]
 

@@ -41,6 +41,9 @@ class Corpus():
 	def __len__(self):
 		return len(self.shelve_file)
 
+	def __del__(self):
+		self.shelve_file.close()
+
 
 
 
@@ -59,7 +62,7 @@ class CorpusObject(Bunch):
 
 
 if __name__ == '__main__':
-	corpus = Corpus('corpus/letter_corpus.shelve')
+	corpus = Corpus('corpus/corpus_merge.shelve')
 
 	for item in corpus:
 			print bcolors.HEADER + '----' + str(item.DATE_created) + '----' + str(item.Letter) + bcolors.ENDC
