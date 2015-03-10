@@ -20,8 +20,8 @@ class TestMerge:
 
 		self.TransformCorpus_merge = TransformCorpus(self.shelve_path + 'test.shelve', test=True)
 
-		self.extracted_strip = Extractor() ## Do some stuff to this extractor
-		self.TransformCorpus_strip = TransformCorpus(self.shelve_path + 'strip_test.shelve', test=True)
+		#self.extracted_strip = Extractor() ## Do some stuff to this extractor
+		#self.TransformCorpus_strip = TransformCorpus(self.shelve_path + 'strip_test.shelve', test=True)
 	
 	def teardown(self):
 		if os.path.isfile(self.shelve_path + 'test_merge.shelve'):

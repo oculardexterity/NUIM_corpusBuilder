@@ -19,17 +19,10 @@ class TransformCorpus():
 			new_id: column in existing shelve to use as the new ID (e.g. Letter ID)
 			merge_column: column to be merged (e.g. the Letter text of multiple pages)
 			break_string: string for marking the join on merge (e.g. a <pb/> tag)
-
 		"""
-		
-		# Determines new shelve file. If unspecified, use old with _merge appended
-		if self.new_shelve_path == "":
-			self.new_shelve_path = self.old_shelve_path.split(".")[0] + '_merge.shelve'
 
-
-		if self.prevent_overwrite(self.new_shelve_path) and self.test:
-			raise Exception('Merge halted to prevent overwrite')
-			return
+		# Builds new file path if none, then asks OK to overwrite if exists
+		self.before_transform('merge')
 
 		# Opens old and new shelve files
 		old_shelve = shelve.open(self.old_shelve_path)
@@ -44,13 +37,30 @@ class TransformCorpus():
 			else:
 				new_shelve[current_row_key] = row
 
+
+
 	def strip_tags(self):
 		''''''
 	
 
+
+	def before_transform(self, transform_name):
+		# Determines new shelve file. If unspecified, use old with _merge appended
+		if self.new_shelve_path == "":
+			self.new_shelve_path = self.old_shelve_path.split(".")[0] + '_' + transform_name + '.shelve'
+		print self.test
+
+		# Checks whether test is True, then whether input allows overwrite if working 
+		if not self.test:	
+			if self.prevent_overwrite(self.new_shelve_path):
+				raise Exception('Merge halted to prevent overwrite')
+				raise SystemExit
+
+
 	def prevent_overwrite(self, the_file):
 		if os.path.isfile(the_file):
 			if raw_input("Overwrite existing corpus? 'y' to confirm: ") == 'y':
+				print 'answered ok to overwrite'
 				os.remove(the_file)
 				return False
 			else:
