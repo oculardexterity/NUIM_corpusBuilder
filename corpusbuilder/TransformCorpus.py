@@ -3,15 +3,15 @@ from Corpus import Corpus as Corpus
 import shelve
 import os
 
-class FixCorpus():
+class TransformCorpus():
 
-	def __init__(self, old_shelve_path, new_id, merge_column, new_shelve_path):
+	def __init__(self, old_shelve_path, new_id, merge_column, new_shelve_path, break_string = "<pb/>"):
 		self.old_shelve_path = old_shelve_path
 		self.new_shelve_path = new_shelve_path
 		self.merge_column = merge_column
 		self.new_id = new_id
+		self.break_string = break_string
 	
-
 
 
 	def merge(self):
@@ -28,17 +28,18 @@ class FixCorpus():
 
 			if current_row_key in new_shelve:
 						 
-				row[self.merge_column] = new_shelve[current_row_key][self.merge_column] + '--------------' + row[self.merge_column]
+				row[self.merge_column] = new_shelve[current_row_key][self.merge_column] + self.break_string + row[self.merge_column]
 				new_shelve[current_row_key] = row
 			else:
 			
 				new_shelve[current_row_key] = row
-			
+	
+
 			
 
 def main():
-	merge = Merge('corpus/corpus.shelve', 'Letter', 'Translation', 'corpus/letter_corpus.shelve')
-	merge.merge()
+	transform = TransformCorpus('corpus/corpus.shelve', 'Letter', 'Translation', 'corpus/letter_corpus.shelve')
+	transform.merge()
 
 if __name__ == "__main__":
 	main()

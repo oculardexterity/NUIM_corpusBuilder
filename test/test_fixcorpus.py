@@ -3,7 +3,7 @@ import pytest
 
 from corpusbuilder.Corpus import Corpus
 from corpusbuilder.Extractor import Extractor as Extractor
-from corpusbuilder.FixCorpus import FixCorpus as FixCorpus
+from corpusbuilder.TransformCorpus import TransformCorpus as TransformCorpus
 
 import os
 import shelve
@@ -20,9 +20,9 @@ class TestMerge:
 
 		self.new_shelve_path = 'test/test_tmp/new_test.shelve'
 
-		self.fixCorpus = FixCorpus(self.shelve_path, 'LetterID', 'merge_column', self.new_shelve_path)
+		self.TransformCorpus = TransformCorpus(self.shelve_path, 'LetterID', 'merge_column', self.new_shelve_path)
 
-	
+		self.break_string = "<pb/>"
 	
 	def teardown(self):
 		if os.path.isfile(self.new_shelve_path):
@@ -32,6 +32,9 @@ class TestMerge:
 	
 
 	def test_merge(self):
-		self.fixCorpus.merge()
+		self.TransformCorpus.merge()
 		new_corpus = Corpus(self.new_shelve_path)
-		assert list(new_corpus.__iter__()) == [{u'DT': 41583.50037037037, u'PageID': u'page_ID2', u'A_HEADER': u'a_value3', u'merge_column': u'MergePart1--------------MergePart2', u'LetterID': u'letterID'}]
+		assert list(new_corpus.__iter__()) == [{u'DT': 41583.50037037037, u'PageID': u'page_ID2', u'A_HEADER': u'a_value3', u'merge_column': u'MergePart1<pb/>MergePart2', u'LetterID': u'letterID'}]
+
+	def test_strip_tags(self):
+		assert 1 == 1
