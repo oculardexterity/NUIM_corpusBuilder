@@ -56,8 +56,8 @@ class TransformCorpus:
 			else:
 				new_shelve[current_row_key] = row
 
-			#set self.old_shelve_path
-			#return self.old_shelve_path
+		self.old_shelve_path = self.new_shelve_path
+		return self.old_shelve_path
 
 	def stripTags(self, column_to_strip):
 		""" 
@@ -73,6 +73,9 @@ class TransformCorpus:
 		for key, row in sorted(old_shelve.items()):
 			row[column_to_strip] = self.tagStripper(row[column_to_strip])
 			new_shelve[key] = row
+
+		self.old_shelve_path = self.new_shelve_path
+		return self.old_shelve_path
 	
 	def tagStripper(self, strg):
 		# By gods, complex... work out how this works later
@@ -113,18 +116,9 @@ class TransformCorpus:
 				except:
 					pass
 				
-					
+		self.old_shelve_path = self.new_shelve_path
+		return self.old_shelve_path
 				
-
-					
-
-
-		#print new_shelve 
-
-
-		
-
-
 
 	def dateRanges(self, dRange, interval, interval_shift):
 		start_date = dRange[0]
