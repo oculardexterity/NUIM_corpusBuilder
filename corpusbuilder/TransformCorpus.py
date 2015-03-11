@@ -155,6 +155,8 @@ class TransformCorpus:
 
 
 
+
+
 	def before_transform(self, transform_name):
 		# Determines new shelve file. If unspecified, use old with _merge appended
 		if self.new_shelve_path == "":
