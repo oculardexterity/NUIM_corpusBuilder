@@ -1,3 +1,4 @@
+
 ''' TO DO:
 
 each function returns its own file path?? -- allows chaining
@@ -56,7 +57,10 @@ class TransformCorpus:
 			else:
 				new_shelve[current_row_key] = row
 
+		old_shelve.close()
+		new_shelve.close()
 		self.old_shelve_path = self.new_shelve_path
+		self.new_shelve_path = ""
 		return self.old_shelve_path
 
 	def stripTags(self, column_to_strip):
@@ -74,7 +78,10 @@ class TransformCorpus:
 			row[column_to_strip] = self.tagStripper(row[column_to_strip])
 			new_shelve[key] = row
 
+		old_shelve.close()
+		new_shelve.close()
 		self.old_shelve_path = self.new_shelve_path
+		self.new_shelve_path = ""
 		return self.old_shelve_path
 	
 	def tagStripper(self, strg):
@@ -116,7 +123,10 @@ class TransformCorpus:
 				except:
 					pass
 				
+		old_shelve.close()
+		new_shelve.close()
 		self.old_shelve_path = self.new_shelve_path
+		self.new_shelve_path = ""
 		return self.old_shelve_path
 				
 
