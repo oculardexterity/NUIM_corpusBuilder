@@ -1,3 +1,10 @@
+''' TO DO:
+
+each function returns its own file path?? -- allows chaining
+... or set old_shelve_path to new_shelve_path? (so not chaining, just a series...)
+
+'''
+
 
 from Corpus import Corpus as Corpus
 
@@ -6,7 +13,7 @@ import os
 import re
 import shelve
 
-class TransformCorpus():
+class TransformCorpus:
 
 	def __init__(self, old_shelve_path, new_shelve_path = "", test = False):
 		self.old_shelve_path = old_shelve_path
@@ -49,7 +56,8 @@ class TransformCorpus():
 			else:
 				new_shelve[current_row_key] = row
 
-
+			#set self.old_shelve_path
+			#return self.old_shelve_path
 
 	def stripTags(self, column_to_strip):
 		""" 
@@ -81,7 +89,7 @@ class TransformCorpus():
 				strg = "".join(lst)
 		return strg
 
-	def mergeByDateRange(self, date_column, date_range, interval):
+	def mergeByDateRange(self, date_column, date_range, interval, interval_shift):
 		""""""
 		self.before_transform('mergeByDateRange')
 
@@ -89,7 +97,7 @@ class TransformCorpus():
 		new_shelve = shelve.open(self.new_shelve_path)
 
 
-		for daterange in self.dateRanges(date_range, interval):
+		for daterange in self.dateRanges(date_range, interval, interval_shift):
 			dr_string = str(daterange[0]) + '---' + str(daterange[1])
 			new_shelve[dr_string] = {'DateRange': dr_string, 'Translation': "" }
 
@@ -111,14 +119,14 @@ class TransformCorpus():
 					
 
 
-		print new_shelve 
+		#print new_shelve 
 
 
 		
 
 
 
-	def dateRanges(self, dRange, interval):
+	def dateRanges(self, dRange, interval, interval_shift):
 		start_date = dRange[0]
 		end_date = dRange[1]
 
@@ -127,10 +135,10 @@ class TransformCorpus():
 		working_date = start_date
 
 		while working_date < end_date:
-			next_working_date = working_date + datetime.timedelta(days=7)
-			new_range = (working_date, next_working_date)
+			range_end_date = working_date + interval
+			new_range = (working_date, range_end_date)
 			date_range_list.append(new_range)
-			working_date = next_working_date
+			working_date = working_date + interval_shift
 
 		return date_range_list
 
@@ -156,7 +164,7 @@ class TransformCorpus():
 		# Checks whether test is True, then whether input allows overwrite if working 
 		if not self.test:	
 			if self.prevent_overwrite(self.new_shelve_path):
-				raise Exception('Merge halted to prevent overwrite')
+				raise Exception('Transform halted to prevent file overwrite')
 				raise SystemExit
 
 

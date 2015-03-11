@@ -60,6 +60,7 @@ class TestMerge:
 																						]
 
 	def test_mergeByDateRange(self):
+		# TEST THIS PROPERLY...!
 		assert 1 == 1
 
 	def test_dateRanges(self):
@@ -67,6 +68,9 @@ class TestMerge:
 		start_date = datetime.date(1991, 01, 01)
 		end_date = datetime.date(1991, 01, 15)
 		date_range = (start_date, end_date)
-		interval = datetime.timedelta(days=7)
-		assert self.TransformCorpus_daterange.dateRanges(date_range, interval) == [(start_date,datetime.date(1991, 1, 8)),
+		interval = datetime.timedelta(days=30)
+		interval_shift = datetime.timedelta(days=7)
+
+		# FAILS... testing wrong date ranges...
+		assert self.TransformCorpus_daterange.dateRanges(date_range, interval, interval_shift) == [(start_date,datetime.date(1991, 1, 8)),
 																																								(datetime.date(1991, 1, 8), end_date)]

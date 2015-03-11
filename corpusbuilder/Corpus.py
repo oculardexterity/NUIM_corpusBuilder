@@ -66,6 +66,6 @@ if __name__ == '__main__':
 
 	for item in corpus:
 			print bcolors.HEADER + item.DateRange + bcolors.ENDC
-			print item.text()
+			print len(item.text())
 
 	print '................................\n', len(corpus)
